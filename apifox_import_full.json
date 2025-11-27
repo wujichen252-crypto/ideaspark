@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Basic API",
+    "version": "1.0.0",
+    "description": "Apifox 导入文件 - 基本接口集合"
+  },
+  "servers": [
+    { "url": "http://localhost:8000" }
+  ],
+  "tags": [
+    { "name": "Sign", "description": "报名模块相关接口" }
+  ],
+  "paths": {
+    "/api/sign/form_scans/": {
+      "post": {
+        "summary": "上传盖章扫描件（PDF）",
+        "description": "仅支持 PDF；使用 multipart/form-data，字段名 `scan`。",
+        "tags": ["Sign"],
+        "security": [ { "bearerAuth": [] } ],
+        "operationId": "uploadApplicationFormScan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "scan": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "PDF 文件（二进制）"
+                  }
+                },
+                "required": ["scan"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "上传成功",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApplicationFormScan" },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "id": 1,
+                      "scan_url": "https://oss.example.com/sign/scans/1/scan.pdf",
+                      "uploader": "alice",
+                      "create_time": "2025-11-07T08:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数或文件格式错误",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "invalid_pdf": { "value": { "error": "仅支持上传 PDF 格式的扫描件" } }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未认证",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "unauthorized": { "value": { "error": "未认证" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sign/form_scans/export_zip/": {
+      "get": {
+        "summary": "导出扫描件为zip下载（按用户名分目录）",
+        "description": "从OSS读取符合条件的扫描件，内存构建zip并返回下载。压缩包包含顶层目录 \"盖章扫描件上传文件\" 及用户名子目录，适合中小规模导出。",
+        "tags": ["Sign"],
+        "security": [ { "bearerAuth": [] } ],
+        "operationId": "exportFormScansZip",
+        "parameters": [
+          {
+            "name": "user_ids",
+            "in": "query",
+            "description": "逗号分隔的用户ID列表，例如 1,2,3；为空表示全部用户",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "起始时间（ISO 8601）",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "结束时间（ISO 8601）",
+            "schema": { "type": "string", "format": "date-time" }
+          },
+          {
+            "name": "max_files",
+            "in": "query",
+            "description": "最大导出文件数上限（用于保护）",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "zip下载",
+            "content": {
+              "application/zip": {
+                "schema": { "type": "string", "format": "binary" }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误或无可导出数据",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplicationFormScan": {
+        "type": "object",
+        "description": "报名信息表扫描件，PDF 文件上传结果",
+        "properties": {
+          "id": { "type": "integer", "format": "int64", "description": "扫描件ID" },
+          "scan_url": { "type": "string", "format": "uri", "description": "扫描件 OSS 链接" },
+          "uploader": { "type": "string", "description": "上传用户（用户名）" },
+          "create_time": { "type": "string", "format": "date-time", "description": "创建时间" }
+        },
+        "required": ["id", "scan_url", "uploader", "create_time"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string", "description": "错误信息" }
+        },
+        "required": ["error"]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

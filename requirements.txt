@@ -1,0 +1,117 @@
+# Django核心
+Django==3.2.24
+
+# REST API框架
+djangorestframework==3.14.0
+
+# JWT认证
+PyJWT==2.6.0
+djangorestframework-simplejwt==5.2.2
+
+# Excel处理
+openpyxl==3.0.10
+xlrd==2.0.1
+pandas==1.5.3
+
+# PDF处理
+reportlab==3.6.12
+PyPDF2==2.10.6
+WeasyPrint==52.5
+
+# Markdown处理
+markdown==3.4.1
+mistune==2.0.4
+
+# 数据库相关
+psycopg2-binary==2.9.5  # PostgreSQL
+mysqlclient==2.1.1       # MySQL
+SQLAlchemy==1.4.46       # ORM
+
+# 缓存
+redis==4.4.4
+python-memcached==1.59
+
+# 图像处理
+Pillow==9.4.0
+
+# 文件上传
+boto3==1.26.100          # AWS S3
+
+# 日志
+python-json-logger==2.0.4
+
+# 安全
+bleach==5.0.1            # XSS防护
+django-cors-headers==3.13.0
+
+# 测试
+pytest==7.2.1
+pytest-django==4.5.2
+coverage==6.5.0
+
+# 工具包
+requests==2.28.2
+python-dateutil==2.8.2
+python-dotenv==0.21.1    # 环境变量管理
+
+# 代码质量
+black==23.1.0
+flake8==6.0.0
+isort==5.12.0
+
+# 异步支持
+channels==3.0.5         # WebSocket支持
+celery==5.2.7           # 异步任务队列
+uvicorn==0.20.0         # ASGI服务器
+
+# 表单处理和验证
+django-crispy-forms==1.14.0
+crispy-bootstrap5==0.7
+django-filter==22.1
+marshmallow==3.19.0
+
+# API文档
+drf-yasg==1.21.4        # Swagger/OpenAPI文档生成
+django-rest-swagger==2.2.0
+
+# 定时任务
+django-celery-beat==2.4.0
+APScheduler==3.9.1
+
+# 数据导入导出扩展
+django-import-export==3.1.0
+
+# 搜索功能
+elasticsearch==7.17.9
+django-haystack==3.2.1
+
+# 性能监控和分析
+raven==6.10.0           # Sentry错误跟踪
+django-debug-toolbar==3.8.1
+psutil==5.9.4
+
+# 安全增强
+django-axes==5.20.0     # 登录尝试限制
+django-ratelimit==3.0.1 # API速率限制
+
+# 国际化和本地化
+django-modeltranslation==0.18.1
+
+# 文件处理扩展
+oss2==2.17.0           # 阿里云OSS SDK
+django-storages==1.13.2
+python-magic==0.4.27    # MIME类型检测
+
+# 内容管理
+django-ckeditor==6.5.1
+
+# 认证扩展
+django-allauth==0.54.0  # 社交认证
+django-oauth-toolkit==1.7.0
+
+# 数据库优化
+django-dbbackup==3.3.0  # 数据库备份
+django-extensions==3.2.1
+
+# 健康检查
+django-health-check==3.17.0
