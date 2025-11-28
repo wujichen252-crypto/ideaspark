@@ -12,30 +12,38 @@ DEBUG = True
 # 开发环境允许所有主机访问
 ALLOWED_HOSTS = ['*']
 
-# 开发环境数据库配置（可以使用SQLite或其他开发数据库）
+# 开发环境数据库配置
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db_dev.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ideaspark',
+        'USER': 'ideaspark',
+        'PASSWORD': '3bLSN4bYiw4JkJnN',
+        'HOST': '62.234.128.72',
+        'PORT': '5432',
+        'CONN_MAX_AGE': 60,
+        'OPTIONS': {
+            'connect_timeout': 10,
+        }
     }
 }
 
-# Django REST Framework 配置
+# Django REST Framework 配置（包含JWT）
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
-        'rest_framework.filters.OrderingFilter',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
     ],
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+    'DATE_FORMAT': '%Y-%m-%d',
+    'TIME_FORMAT': '%H:%M:%S',
 }
 
 # CORS 配置（开发环境允许所有跨域请求）
@@ -46,6 +54,23 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
 ]
+
+# JWT 配置
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
 
 # 日志配置
 LOGGING = {
